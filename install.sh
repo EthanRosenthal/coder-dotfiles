@@ -1,5 +1,7 @@
 #!/bin/bash
 
+cp gitconfig ~/.gitconfig
+
 # Zsh Shell
 apt -y update && apt -y upgrade
 apt -y install build-essential \
