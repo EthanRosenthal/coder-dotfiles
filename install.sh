@@ -2,6 +2,9 @@
 
 cp gitconfig ~/.gitconfig
 
+git config --global user.email "ethan@runwayml.com"
+git config --global user.name "EthanRosenthal"
+
 # Zsh Shell
 apt -y update && apt -y upgrade
 apt -y install build-essential \
