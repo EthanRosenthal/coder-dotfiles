@@ -1,5 +1,9 @@
 # Taken from https://blog.gitbutler.com/how-git-core-devs-configure-git/
 
+[user]
+        email = ethan@runwayml.com
+        name = EthanRosenthal
+
 # clearly makes git better
 
 [column]
@@ -50,4 +54,3 @@
         # conflictstyle = zdiff3 
 [pull]
         # rebase = true
-
