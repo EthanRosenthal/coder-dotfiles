@@ -8,6 +8,7 @@ fi
 cp gitconfig ~/.gitconfig
 
 # Zsh Shell
+add-apt-repository -y ppa:git-core/ppa
 apt -y update && apt -y upgrade
 apt -y install build-essential \
                 curl git xclip htop tree nano
