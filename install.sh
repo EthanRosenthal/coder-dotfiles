@@ -31,6 +31,13 @@ brew install docker
 brew install k9s
 brew install node
 
+# Allow pip to install packages system-wide (workaround for PEP 668)
+mkdir -p /etc
+cat > /etc/pip.conf << 'PIPEOF'
+[global]
+break-system-packages = true
+PIPEOF
+
 # Claude Code
 curl -fsSL https://claude.ai/install.sh | bash
 
