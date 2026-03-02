@@ -48,9 +48,9 @@ cat > ~/.claude/settings.json << 'EOF'
 }
 EOF
 echo "export ENABLE_LSP_TOOL=1" >> ~/.zshrc
-claude plugin marketplace update claude-plugins-official
-claude plugin install pyright-lsp
-claude plugin enable pyright-lsp
+claude plugin marketplace update claude-plugins-official || true
+claude plugin install pyright-lsp || true
+claude plugin enable pyright-lsp || true
 
 # Mark setup as complete
 touch "$HOME/.dotfiles-installed"
