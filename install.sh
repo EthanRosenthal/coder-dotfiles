@@ -37,6 +37,11 @@ cat > /etc/pip.conf << 'PIPEOF'
 [global]
 break-system-packages = true
 PIPEOF
+mkdir -p ~/.config/pip
+cat > ~/.config/pip/pip.conf << 'PIPEOF'
+[global]
+break-system-packages = true
+PIPEOF
 
 # Claude Code
 curl -fsSL https://claude.ai/install.sh | bash
