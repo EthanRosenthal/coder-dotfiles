@@ -25,15 +25,14 @@ BASHEOF
 # Oh My Zsh installation
 echo "Y" | sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
-# Terminal
-grep -q "COLORTERM=truecolor" ~/.zshrc 2>/dev/null || echo "COLORTERM=truecolor" >> ~/.zshrc
+# Install clean zshrc (overwrite whatever OMZ generated)
+cp "$(dirname "$0")/zshrc" ~/.zshrc
 
-# brew
+# brew (activate for remainder of this script)
 test -d ~/.linuxbrew && eval "$(~/.linuxbrew/bin/brew shellenv)"
 test -d /home/linuxbrew/.linuxbrew && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 BREW_SHELLENV="eval \"\$($(brew --prefix)/bin/brew shellenv)\""
 grep -qF "brew shellenv" ~/.bashrc 2>/dev/null || echo "$BREW_SHELLENV" >> ~/.bashrc
-grep -qF "brew shellenv" ~/.zshrc 2>/dev/null || echo "$BREW_SHELLENV" >> ~/.zshrc
 
 brew install docker
 brew install k9s
@@ -67,7 +66,6 @@ cat > ~/.claude/settings.json << 'EOF'
   }
 }
 EOF
-grep -q "ENABLE_LSP_TOOL" ~/.zshrc 2>/dev/null || echo "export ENABLE_LSP_TOOL=1" >> ~/.zshrc
 claude plugin marketplace update claude-plugins-official || true
 claude plugin install pyright-lsp || true
 claude plugin enable pyright-lsp || true
