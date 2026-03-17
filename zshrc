@@ -14,7 +14,7 @@ source $ZSH/oh-my-zsh.sh
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
 # Ensure ~/.local/bin takes precedence over linuxbrew (e.g. for python3 symlinks)
-export PATH="$HOME/.local/bin:$PATH"
+export PATH="/root/streaming-inference/.venv/bin:$HOME/.local/bin:$PATH"
 
 export COLORTERM=truecolor
 export ENABLE_LSP_TOOL=1
