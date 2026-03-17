@@ -2,7 +2,7 @@
 
 # Only run once — skip if we've already set up this workspace
 if [ -f "$HOME/.dotfiles-installed" ]; then
-  exec zsh
+  exit 0
 fi
 
 cp gitconfig ~/.gitconfig
@@ -15,17 +15,25 @@ apt -y install build-essential \
 apt install -y zsh
 chsh -s $(which zsh)
 
+# Ensure zsh starts on login even if chsh doesn't stick (e.g. containers)
+grep -q "exec zsh" ~/.bashrc 2>/dev/null || cat >> ~/.bashrc << 'BASHEOF'
+if [ -x "$(command -v zsh)" ]; then
+  exec zsh
+fi
+BASHEOF
+
 # Oh My Zsh installation
 echo "Y" | sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
 # Terminal
-echo "COLORTERM=truecolor" >> ~/.zshrc
+grep -q "COLORTERM=truecolor" ~/.zshrc 2>/dev/null || echo "COLORTERM=truecolor" >> ~/.zshrc
 
 # brew
 test -d ~/.linuxbrew && eval "$(~/.linuxbrew/bin/brew shellenv)"
 test -d /home/linuxbrew/.linuxbrew && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-echo "eval \"\$($(brew --prefix)/bin/brew shellenv)\"" >> ~/.bashrc
-echo "eval \"\$($(brew --prefix)/bin/brew shellenv)\"" >> ~/.zshrc
+BREW_SHELLENV="eval \"\$($(brew --prefix)/bin/brew shellenv)\""
+grep -qF "brew shellenv" ~/.bashrc 2>/dev/null || echo "$BREW_SHELLENV" >> ~/.bashrc
+grep -qF "brew shellenv" ~/.zshrc 2>/dev/null || echo "$BREW_SHELLENV" >> ~/.zshrc
 
 brew install docker
 brew install k9s
@@ -59,12 +67,10 @@ cat > ~/.claude/settings.json << 'EOF'
   }
 }
 EOF
-echo "export ENABLE_LSP_TOOL=1" >> ~/.zshrc
+grep -q "ENABLE_LSP_TOOL" ~/.zshrc 2>/dev/null || echo "export ENABLE_LSP_TOOL=1" >> ~/.zshrc
 claude plugin marketplace update claude-plugins-official || true
 claude plugin install pyright-lsp || true
 claude plugin enable pyright-lsp || true
 
 # Mark setup as complete
 touch "$HOME/.dotfiles-installed"
-
-exec zsh
