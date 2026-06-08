@@ -13,7 +13,7 @@ apt -y update && apt -y upgrade
 apt -y install build-essential \
                 curl git xclip htop tree nano
 apt install -y zsh
-chsh -s $(which zsh)
+sudo chsh -s /usr/bin/zsh "$(whoami)"
 
 # Ensure zsh starts on login even if chsh doesn't stick (e.g. containers)
 grep -q "exec zsh" ~/.bashrc 2>/dev/null || cat >> ~/.bashrc << 'BASHEOF'
