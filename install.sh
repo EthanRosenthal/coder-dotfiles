@@ -15,12 +15,19 @@ apt -y install build-essential \
 apt install -y zsh
 sudo chsh -s /usr/bin/zsh "$(whoami)"
 
-# Ensure zsh starts on login even if chsh doesn't stick (e.g. containers)
-grep -q "exec zsh" ~/.bashrc 2>/dev/null || cat >> ~/.bashrc << 'BASHEOF'
-if [ -x "$(command -v zsh)" ]; then
-  exec zsh
-fi
-BASHEOF
+# Ensure zsh starts even if chsh doesn't stick (e.g. containers).
+# Login shells (SSH, tmux) source ~/.profile; interactive non-login shells
+# source ~/.bashrc -- so install the hand-off into both. The $- guard means
+# non-interactive shells (e.g. `ssh host cmd`) are never replaced.
+for rc in ~/.profile ~/.bashrc; do
+  grep -qF "exec zsh" "$rc" 2>/dev/null || cat >> "$rc" << 'RCEOF'
+
+# Switch to zsh for interactive shells
+case $- in
+  *i*) [ -z "$ZSH_VERSION" ] && [ -x "$(command -v zsh)" ] && exec zsh ;;
+esac
+RCEOF
+done
 
 # Oh My Zsh installation
 echo "Y" | sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
