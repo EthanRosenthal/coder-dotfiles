@@ -105,6 +105,14 @@ sync_zshrc() {
 sync_config() {
   sync_file "$DOTFILES_DIR/gitconfig" "$HOME/.gitconfig"
   sync_zshrc
+  sync_file "$DOTFILES_DIR/tmux.conf" "$HOME/.tmux.conf"
+
+  # ~/.tmux.conf is only read when a tmux *server* starts. Normally there is no
+  # server yet at workspace start, but if one survived (or the script is re-run
+  # by hand from inside tmux), reload so the change applies without a kill-server.
+  if command -v tmux >/dev/null 2>&1 && tmux has-session 2>/dev/null; then
+    tmux source-file "$HOME/.tmux.conf" && log "reloaded config in running tmux server"
+  fi
 
   # A bare `compinit` in the old zshrc wrote this dump with a file count that
   # never matched again, forcing a full fpath rescan (~13s over NFS) in every new
@@ -164,7 +172,7 @@ provision_once() {
   add-apt-repository -y ppa:git-core/ppa
   apt -y update && apt -y upgrade
   apt -y install build-essential \
-                  curl git xclip htop tree nano
+                  curl git xclip htop tree nano tmux
   apt install -y zsh
   sudo chsh -s /usr/bin/zsh "$(whoami)"
 
